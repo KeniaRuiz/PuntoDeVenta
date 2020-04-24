@@ -25,7 +25,8 @@ namespace PuntoDeVenta
             {
                 cn = new SqlConnection("Data Source=la-guadalupana.chmhdwsd417m.us-west-2.rds.amazonaws.com;Initial Catalog=PuntoDeVenta;Persist Security Info=True;User ID=pvadmin;Password=ingsoftware2");
                 cn.Open();
-                MessageBox.Show("Conectado");
+                Console.WriteLine("Conectado");
+               // MessageBox.Show("Conectado");
             }
             catch (Exception ex)
             {

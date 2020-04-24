@@ -18,6 +18,7 @@ namespace PuntoDeVenta
         String aux;
         bool producto;
         int auxcant;
+        bool existe;
         private float total()
         {
             float total = 0.0f;
@@ -26,7 +27,7 @@ namespace PuntoDeVenta
                 total += float.Parse(dataGridView1[3, i].Value.ToString());
 
             }
-            label3.Text = "Total = " + total;
+            label3.Text = "Total = \n $" + total;
             textBox1.Clear();
             textBox1.Focus();
             
@@ -39,7 +40,7 @@ namespace PuntoDeVenta
             {
                 String[] sarray = textBox1.Text.Split('*');
 
-                if (sarray[0].Length<sarray[1].Length)
+                if (sarray[0].Length < sarray[1].Length)
                 {
                     for (int i = 0; i < productos.Count; i++)
                     {
@@ -47,7 +48,14 @@ namespace PuntoDeVenta
                         {
                             if (sarray[1].Equals(productos[i].Codigo))
                             {
+                                existe = true;
                                 Producto p = productos[i];
+                                if (dataGridView1.Rows.Count == 0)
+                                {
+                                    dataGridView1.Rows.Add(sarray[0], p.Nombre, p.Precio, float.Parse(sarray[0]) * (float)p.Precio);
+                                    total();
+                                    break;
+                                }
                                 for (int j = 0; j < dataGridView1.Rows.Count; j++)
                                 {
                                     aux = dataGridView1[1, j].Value.ToString();
@@ -60,45 +68,61 @@ namespace PuntoDeVenta
                                     else
                                     {
                                         producto = false;
-
                                     }
-                                    
+
                                 }
                                 if (producto)
                                 {
                                     dataGridView1[0, auxcant].Value = int.Parse(dataGridView1[0, auxcant].Value.ToString()) + int.Parse(sarray[0]);
+                                    dataGridView1[3, auxcant].Value = int.Parse(dataGridView1[0, auxcant].Value.ToString()) * (float)p.Precio;
                                     total();
+                                    break;
                                 }
                                 else
                                 {
                                     dataGridView1.Rows.Add(sarray[0], p.Nombre, p.Precio, float.Parse(sarray[0]) * (float)p.Precio);
                                     total();
+                                    break;
                                 }
-
-                                if (dataGridView1.Rows.Count == 0)
-                                {
-                                    dataGridView1.Rows.Add(sarray[0], p.Nombre, p.Precio, float.Parse(sarray[0]) * (float)p.Precio);
-                                    total();
-                                }
-
+                               
+                            }
+                            else
+                            {
+                                existe = false;
                             }
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            MessageBox.Show("Ingrese una cantidad válida");
+                            MessageBox.Show("Ingrese una cantidad válida" + ex);
                             textBox1.Clear();
                         }
-                }
+                    }
+                    if(existe){
+                        error.Text = "";
+                    }
+                    else
+                    {
+                        error.Text = "NO SE ENCONTRO PRODUCTO \n       VERIFIQUE EL CÓDIGO";
+                    }
                 }
                 else
                 {
-                for (int i = 0; i < productos.Count; i++)
-                {
+                    for (int i = 0; i < productos.Count; i++)
+                    {
                         try
                         {
                             if (sarray[0].Equals(productos[i].Codigo))
                             {
+                                existe = true;
                                 Producto p = productos[i];
+
+                                if (dataGridView1.Rows.Count == 0)
+                                {
+                                    dataGridView1.Rows.Add(sarray[1], p.Nombre, p.Precio, float.Parse(sarray[1]) * (float)p.Precio);
+                                    total();
+                                    break;
+                                }
+
                                 for (int j = 0; j < dataGridView1.Rows.Count; j++)
                                 {
                                     aux = dataGridView1[1, j].Value.ToString();
@@ -112,33 +136,43 @@ namespace PuntoDeVenta
                                     {
                                         producto = false;
                                     }
-                                   
                                 }
 
                                 if (producto)
                                 {
                                     dataGridView1[0, auxcant].Value = int.Parse(dataGridView1[0, auxcant].Value.ToString()) + int.Parse(sarray[1]);
+                                    dataGridView1[3, auxcant].Value = int.Parse(dataGridView1[0, auxcant].Value.ToString()) * (float)p.Precio;
                                     total();
+                                    break;
                                 }
                                 else
                                 {
                                     dataGridView1.Rows.Add(sarray[1], p.Nombre, p.Precio, float.Parse(sarray[1]) * (float)p.Precio);
                                     total();
+                                    break;
                                 }
-                                if (dataGridView1.Rows.Count == 0)
-                                {
-                                    dataGridView1.Rows.Add(sarray[1], p.Nombre, p.Precio, float.Parse(sarray[1]) * (float)p.Precio);
-                                    total();
-                                }
+                                
+                            }
+                            else
+                            {
+                                existe = false;
                             }
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            MessageBox.Show("Ingrese una cantidad válida");
+                            MessageBox.Show("Ingrese una cantidad válida" + ex.Message);
                             textBox1.Clear();
                         }
-                }
-                }         
+                    }
+                    if (existe)
+                    {
+                        error.Text = "";
+                    }
+                    else
+                    {
+                        error.Text = "NO SE ENCONTRO PRODUCTO \n       VERIFIQUE EL CÓDIGO";
+                    }
+                }        
             }
             else
             {
@@ -146,11 +180,18 @@ namespace PuntoDeVenta
                 {
                     try
                     {
-                        
+                        existe = true;
+                        Producto p = productos[i];
 
                         if (textBox1.Text.Equals(productos[i].Codigo))
                         {
-                            Producto p = productos[i];
+                            if (dataGridView1.Rows.Count == 0)
+                            {
+                                dataGridView1.Rows.Add("1", p.Nombre, p.Precio, p.Precio);
+                                total();
+                                break;
+                            }
+
                             for (int j = 0; j < dataGridView1.Rows.Count; j++)
                             {
                                 aux = dataGridView1[1, j].Value.ToString();
@@ -170,27 +211,40 @@ namespace PuntoDeVenta
                             if (producto)
                             {
                                 dataGridView1[0, auxcant].Value = int.Parse(dataGridView1[0, auxcant].Value.ToString()) + 1;
+                                dataGridView1[3, auxcant].Value = int.Parse(dataGridView1[0, auxcant].Value.ToString()) * (float)p.Precio;
                                 total();
+                                break;
                             }
                             else
                             {
                                 dataGridView1.Rows.Add("1", p.Nombre, p.Precio, p.Precio);
                                 total();
-                            }
-                            if (dataGridView1.Rows.Count==0){
-                                dataGridView1.Rows.Add("1", p.Nombre, p.Precio, p.Precio);
-                                total();
+                                break;
                             }
 
+                            
+                        }
+                        else
+                        {
+                            existe = false;
                         }
                         
                     }
-                    catch (FormatException)
+                    catch (Exception e)
                     {
-                        MessageBox.Show("Ingrese un código válido");
+                        MessageBox.Show("Ingrese un código válido"+e);
                         textBox1.Clear();
                     }
                 }
+                if (existe)
+                {
+                    error.Text = "";
+                }
+                else
+                {
+                    error.Text = "NO SE ENCONTRO PRODUCTO \n       VERIFIQUE EL CÓDIGO";
+                }
+
             }
             this.ActiveControl = textBox1;
             productos = c.getProductos();
@@ -199,32 +253,28 @@ namespace PuntoDeVenta
         {
             
             InitializeComponent();
+           
             this.Size = Screen.PrimaryScreen.WorkingArea.Size;
             this.ActiveControl = textBox1;
+            
             c = new Conexion();
             productos = c.getProductos();
             
             label3.Text = "Total =";
 
-            //label1.Location = new Point((this.Width / 2) - label1.Width / 2, 5);
-            //label2.Text = DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString();
-            //label2.Location = new Point(label4.Width, label1.Height + 10);
-            //dataGridView1.Width = this.Width - 20;
-            //dataGridView1.Height = this.Height * 3 / 4;
-            //dataGridView1.Location = new Point(10, label2.Height + label1.Height + 25);
-            //textBox1.Width = this.Width - 20;
-            //textBox1.Location = new Point(10, this.Height - textBox1.Height - 10);
-
-            //label3.Location = new Point(this.Width - dataGridView1.Columns[3].Width, label1.Height + label2.Height + dataGridView1.Height + 35);
-            //label4.Location = new Point((this.Width * 3 / 4), label1.Height + 10);
-
-            
         }
 
         
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            DateTime dt = DateTime.Now;
+            fecha.Text=String.Format("{0:dd/MM/yyyy}", dt);
+            hora.Text = DateTime.Now.ToLongTimeString();
+            dataGridView1.DefaultCellStyle.Font = new Font("Arial", 18);
+            dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Arial", 18);
+            dataGridView1.DefaultCellStyle.ForeColor = Color.Black;
+            
 
         }
 
@@ -234,6 +284,7 @@ namespace PuntoDeVenta
             {
                 productos = c.getProductos();
                 buscarProductos();
+                dataGridView1.ClearSelection();
                 textBox1.Text = String.Empty;
             }
             if(e.KeyCode  == Keys.Escape)
@@ -247,14 +298,18 @@ namespace PuntoDeVenta
             }
             if (e.KeyCode == Keys.P)
             {
-                float subtotal = total();
-                DialogResult dialogResult = MessageBox.Show("¿Listo para pagar?  \n Total: " + total(), "Pagar", MessageBoxButtons.YesNo);
+                DialogResult dialogResult = MessageBox.Show("¡Venta realizada con éxito!  \n Total: " + total(), "VENTA COMPLETADA", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
                 {
-
-                    dataGridView1.Rows.Clear();
-                    label3.Text = "Total = ";
-
+                    if (dataGridView1.Rows.Count == 0)
+                    {
+                        MessageBox.Show("No hay productos marcados para vender", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else
+                    {
+                        dataGridView1.Rows.Clear();
+                        label3.Text = "Total = ";
+                    }
 
                 }
                 else if (dialogResult == DialogResult.No)
@@ -278,50 +333,63 @@ namespace PuntoDeVenta
             }
             if (e.KeyCode == Keys.B)
             {
-                dataGridView1.Rows.Remove(dataGridView1.CurrentRow);
-                textBox1.Focus();
-                textBox1.Clear();
+                if (dataGridView1.Rows.Count == 0)
+                {
+                    MessageBox.Show("Selecciones un producto para eliminar", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else
+                {
+                    dataGridView1.Rows.Remove(dataGridView1.CurrentRow);
+                    textBox1.Focus();
+                    textBox1.Clear();
+                }
             }
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void dataGridView1_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void pagar_Click(object sender, EventArgs e)
         {
-            float subtotal = total();
-            DialogResult dialogResult = MessageBox.Show("¿Listo para pagar?  \n Total: "+total(), "Pagar", MessageBoxButtons.YesNo);
-            if (dialogResult == DialogResult.Yes)
+            if (dataGridView1.Rows.Count == 0)
             {
-                
-                dataGridView1.Rows.Clear();
-                label3.Text = "Total = ";
-
-
+                MessageBox.Show("No hay productos marcados para vender", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            else if (dialogResult == DialogResult.No)
+            else
             {
-                textBox1.Clear();
+                DialogResult dialogResult = MessageBox.Show("¡Venta realizada con éxito!  \n Total: " + total(), "VENTA COMPLETADA");
+                if (dialogResult == DialogResult.Yes)
+                {
+                    dataGridView1.Rows.Clear();
+                    label3.Text = "Total = ";
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    textBox1.Clear();
+                }
             }
+            
         }
 
         private void borrar_Click(object sender, EventArgs e)
         {
-            dataGridView1.Rows.Remove(dataGridView1.CurrentRow);
-            textBox1.Focus();
-            textBox1.Clear();
+            if (dataGridView1.Rows.Count == 0)
+            {
+                MessageBox.Show("No hay productos marcados");
+            }
+            else
+            {
+                if(dataGridView1.CurrentRow==null)
+                {
+                    MessageBox.Show("Seleccione un producto para eliminar");
+                }
+                else
+                {
+                    dataGridView1.Rows.Remove(dataGridView1.CurrentRow);
+                    textBox1.Focus();
+                    textBox1.Clear();
+                }
+                
+            }
+            
         }
 
         private void cerrar_Click(object sender, EventArgs e)
@@ -337,19 +405,14 @@ namespace PuntoDeVenta
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+
+        private void Ayuda_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pictureBox3_Click(object sender, EventArgs e)
-        {
-
+            var Form2 = new Form2();
+            Form2.StartPosition = FormStartPosition.CenterScreen;
+            Form2.Shown += (o, args) => { this.Enabled = false; };
+            Form2.FormClosed += (o, args) => { this.Enabled = true; };
+            Form2.Show();
         }
     }
 }
