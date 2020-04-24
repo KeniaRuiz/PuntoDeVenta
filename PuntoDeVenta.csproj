@@ -84,6 +84,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -109,6 +110,27 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\rsz_close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\rsz_signo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\rsz_carrito.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\rsz_1moneyicon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\rsz_tiendita_gor2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\rsz_dateicon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\fondo3 %282%29.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
