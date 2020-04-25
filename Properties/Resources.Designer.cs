@@ -123,6 +123,16 @@ namespace PuntoDeVenta.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap rsz_pulgar2 {
+            get {
+                object obj = ResourceManager.GetObject("rsz_pulgar2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap rsz_signo {
             get {
                 object obj = ResourceManager.GetObject("rsz_signo", resourceCulture);

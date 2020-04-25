@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 
 namespace PuntoDeVenta
 {
@@ -22,7 +16,7 @@ namespace PuntoDeVenta
         private float total()
         {
             float total = 0.0f;
-            for(int i = 0; i< dataGridView1.Rows.Count; i++)
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
                 total += float.Parse(dataGridView1[3, i].Value.ToString());
 
@@ -30,7 +24,7 @@ namespace PuntoDeVenta
             label3.Text = "Total = \n $" + total;
             textBox1.Clear();
             textBox1.Focus();
-            
+
             return total;
         }
 
@@ -84,7 +78,7 @@ namespace PuntoDeVenta
                                     total();
                                     break;
                                 }
-                               
+
                             }
                             else
                             {
@@ -97,7 +91,8 @@ namespace PuntoDeVenta
                             textBox1.Clear();
                         }
                     }
-                    if(existe){
+                    if (existe)
+                    {
                         error.Text = "";
                     }
                     else
@@ -151,7 +146,7 @@ namespace PuntoDeVenta
                                     total();
                                     break;
                                 }
-                                
+
                             }
                             else
                             {
@@ -172,7 +167,7 @@ namespace PuntoDeVenta
                     {
                         error.Text = "NO SE ENCONTRO PRODUCTO \n       VERIFIQUE EL CÓDIGO";
                     }
-                }        
+                }
             }
             else
             {
@@ -205,7 +200,7 @@ namespace PuntoDeVenta
                                 {
                                     producto = false;
                                 }
-                                
+
                             }
 
                             if (producto)
@@ -222,17 +217,17 @@ namespace PuntoDeVenta
                                 break;
                             }
 
-                            
+
                         }
                         else
                         {
                             existe = false;
                         }
-                        
+
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show("Ingrese un código válido"+e);
+                        MessageBox.Show("Ingrese un código válido" + e);
                         textBox1.Clear();
                     }
                 }
@@ -251,34 +246,31 @@ namespace PuntoDeVenta
         }
         public Form1()
         {
-            
             InitializeComponent();
-           
+
             this.Size = Screen.PrimaryScreen.WorkingArea.Size;
             this.ActiveControl = textBox1;
-            
+
             c = new Conexion();
             productos = c.getProductos();
-            
+
             label3.Text = "Total =";
 
         }
 
-        
-
         private void Form1_Load(object sender, EventArgs e)
         {
             DateTime dt = DateTime.Now;
-            fecha.Text=String.Format("{0:dd/MM/yyyy}", dt);
+            fecha.Text = String.Format("{0:dd/MM/yyyy}", dt);
             hora.Text = DateTime.Now.ToLongTimeString();
             dataGridView1.DefaultCellStyle.Font = new Font("Arial", 18);
             dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Arial", 18);
             dataGridView1.DefaultCellStyle.ForeColor = Color.Black;
-            
+
 
         }
 
-       private void TextBox1_KeyDown(object sender, KeyEventArgs e)
+        private void TextBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -287,114 +279,122 @@ namespace PuntoDeVenta
                 dataGridView1.ClearSelection();
                 textBox1.Text = String.Empty;
             }
-            if(e.KeyCode  == Keys.Escape)
+            if (e.KeyCode == Keys.Escape)
             {
                 if (dataGridView1.Rows.Count >= 1)
                 {
-                    dataGridView1.Rows.RemoveAt(dataGridView1.Rows.Count - 1);;
+                    dataGridView1.Rows.RemoveAt(dataGridView1.Rows.Count - 1); ;
                     total();
                 }
-                
+
             }
             if (e.KeyCode == Keys.P)
             {
-                DialogResult dialogResult = MessageBox.Show("¡Venta realizada con éxito!  \n Total: " + total(), "VENTA COMPLETADA", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes)
+                if (dataGridView1.Rows.Count == 0)
                 {
-                    if (dataGridView1.Rows.Count == 0)
-                    {
-                        MessageBox.Show("No hay productos marcados para vender", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                    else
+
+                    MessageBox.Show("No hay productos marcados para vender", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBox1.Clear();
+                }
+                else
+                {
+                    DialogResult dialogResult = MessageBox.Show("¡Venta realizada con éxito!  \n          Total: $" + total(), "VENTA COMPLETADA", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
+                    if (dialogResult == DialogResult.OK)
                     {
                         dataGridView1.Rows.Clear();
                         label3.Text = "Total = ";
+                        textBox1.Clear();
                     }
-
+                    else if (dialogResult == DialogResult.Cancel)
+                    {
+                        textBox1.Clear();
+                    }
                 }
-                else if (dialogResult == DialogResult.No)
-                {
-                    textBox1.Clear();
-                }
-
             }
-            if (e.KeyCode == Keys.S)
-            {
-                DialogResult dialogResult = MessageBox.Show("¿Seguro que desea salir?", "Salir", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes)
-                {
-                    Application.Exit();
-                }
-                else if (dialogResult == DialogResult.No)
-                {
-                    textBox1.Clear();
-                }
-
-            }
+            
             if (e.KeyCode == Keys.B)
             {
                 if (dataGridView1.Rows.Count == 0)
                 {
-                    MessageBox.Show("Selecciones un producto para eliminar", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("No hay productos marcados", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBox1.Clear();
                 }
                 else
                 {
-                    dataGridView1.Rows.Remove(dataGridView1.CurrentRow);
-                    textBox1.Focus();
-                    textBox1.Clear();
+                    if (dataGridView1.CurrentCell.Selected == false)
+
+                    {
+                        MessageBox.Show("Seleccione un producto para eliminar", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        textBox1.Text = String.Empty;
+                    }
+                    else
+                    {
+                        DialogResult dialogResult = MessageBox.Show("             ATENCIÓN !!\nEliminara el producto seleccionado", "VENTA COMPLETADA", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                        if (dialogResult == DialogResult.OK)
+                        {
+                            textBox1.Text = String.Empty;
+                            dataGridView1.Rows.Remove(dataGridView1.CurrentRow);
+                            textBox1.Focus();
+                            dataGridView1.ClearSelection();
+                        }
+                        else if (dialogResult == DialogResult.Cancel)
+                        {
+                            textBox1.Clear();
+                        }
+                    }
+                   
                 }
             }
         }
-
 
         private void pagar_Click(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count == 0)
             {
+               
                 MessageBox.Show("No hay productos marcados para vender", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {
-                DialogResult dialogResult = MessageBox.Show("¡Venta realizada con éxito!  \n Total: " + total(), "VENTA COMPLETADA");
-                if (dialogResult == DialogResult.Yes)
+                DialogResult dialogResult = MessageBox.Show("¡Venta realizada con éxito!  \n          Total: $" + total(), "VENTA COMPLETADA",MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
+                if (dialogResult == DialogResult.OK)
                 {
                     dataGridView1.Rows.Clear();
                     label3.Text = "Total = ";
                 }
-                else if (dialogResult == DialogResult.No)
+                else if (dialogResult == DialogResult.Cancel)
                 {
                     textBox1.Clear();
                 }
             }
-            
         }
 
         private void borrar_Click(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count == 0)
             {
-                MessageBox.Show("No hay productos marcados");
+                MessageBox.Show("No hay productos marcados", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
             }
             else
             {
-                if(dataGridView1.CurrentRow==null)
+                if (dataGridView1.CurrentCell.Selected == false)
+
                 {
-                    MessageBox.Show("Seleccione un producto para eliminar");
+                    MessageBox.Show("Seleccione un producto para eliminar", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 else
                 {
                     dataGridView1.Rows.Remove(dataGridView1.CurrentRow);
                     textBox1.Focus();
                     textBox1.Clear();
+                    dataGridView1.ClearSelection();
                 }
-                
             }
-            
         }
-
         private void cerrar_Click(object sender, EventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("¿Seguro que desea salir?", "Salir", MessageBoxButtons.YesNo);
+            DialogResult dialogResult = MessageBox.Show("¿Seguro que desea salir?", "Salir", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (dialogResult == DialogResult.Yes)
             {
                 Application.Exit();
